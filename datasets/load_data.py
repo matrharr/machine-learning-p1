@@ -1,5 +1,6 @@
 import pandas as pd
 
+from sklearn.compose import make_column_transformer
 from sklearn.preprocessing import OneHotEncoder
 
 
@@ -16,27 +17,23 @@ class DataLoader:
     
     def _load_loan_data(self):
         loan = pd.read_csv('datasets/loan-default.csv')
-        # use pipeline for below?
         # remove missing values
         # if needed, convert text values to categorical (one hot)
         # feature scaling - are numerical attributes at very diff scales?
-        employment_type = OneHotEncoder()
-        employment_type.fit_transform(loan[['Employment.Type']])
-
-        cns_score_description = OneHotEncoder()
-        cns_score_description.fit_transform(loan[['PERFORM_CNS.SCORE.DESCRIPTION']])
-        
-        loan = loan.drop([
-            'DisbursalDate',
-            'Date.of.Birth',
-            'Employment.Type',
-            'PERFORM_CNS.SCORE.DESCRIPTION',
-            'AVERAGE.ACCT.AGE',
-            'CREDIT.HISTORY.LENGTH'
-            ], axis=1)
-        loan['employment_type'] = employment_type
+        ohe = OneHotEncoder()
         [print(col) for col in loan.columns]
-        return loan
+
+        col_trans = make_column_transformer(
+            (ohe, ['Employment.Type', 'PERFORM_CNS.SCORE.DESCRIPTION']),
+            ('drop', [
+                'DisbursalDate',
+                'Date.of.Birth',
+                'AVERAGE.ACCT.AGE',
+                'CREDIT.HISTORY.LENGTH'
+            ]),
+            remainder='passthrough'
+        )
+        return col_trans, loan
 
     def _load_bankrupt_data(self):
         bankrupt = pd.read_csv('datasets/company-bankrupt.csv')
@@ -44,5 +41,9 @@ class DataLoader:
         # remove missing values
         # if needed, convert text values to categorical (one hot)
         # feature scaling - are numerical attributes at very diff scales?
-
-        return bankrupt
+        ohe = OneHotEncoder()
+        col_trans = make_column_transformer(
+            (ohe, []),
+            remainder='passthrough'
+        )
+        return col_trans, bankrupt
