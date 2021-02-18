@@ -17,8 +17,12 @@ from evaluation.get_metrics import DataMetrics
 '''
 get training data
 '''
-loader = DataLoader('bankrupt')
+# loader = DataLoader('bankrupt')
+# bankruptcy = loader.load_data()
+# y_col = 'Bankrupt?'
+loader = DataLoader('loan')
 bankruptcy = loader.load_data()
+y_col = 'loan_default'
 
 '''
 stratified split - so we split data uniformly
@@ -29,19 +33,23 @@ sss = StratifiedShuffleSplit(
     test_size=0.2
 )
 x_all = bankruptcy
-y_all = bankruptcy['Bankrupt?']
+y_all = bankruptcy[y_col]
+
 for train_index, test_index in sss.split(x_all, y_all):
     train_set = bankruptcy.loc[train_index]
     test_set = bankruptcy.loc[test_index]
 
-x_train = train_set.drop('Bankrupt?', axis=1)
-y_train = train_set['Bankrupt?'].copy()
+x_train = train_set.drop(y_col, axis=1)
+y_train = train_set[y_col].copy()
+
+x_test = test_set.drop(y_col, axis=1)
+y_test = test_set[y_col].copy()
 
 '''
 check correlation (linear)
 '''
 corr_matrix = bankruptcy.corr()
-print('attribute correlation', corr_matrix["Bankrupt?"].sort_values(ascending=False))
+print('attribute correlation', corr_matrix[y_col].sort_values(ascending=False))
 
 '''
 model
@@ -59,24 +67,19 @@ metrics = DataMetrics().get_metrics(
     x_train,
     y_all,
     x_all,
-    model.predict(x_train),
+    model.predict(x_test),
+    y_test,
     mse=True,
     rmse=True,
     confusion_matrix=True,
     cross_val_score=True,
+    accuracy_score=True,
     precision_score=True,
     recall_score=True,
-    roc_curve=True,
+    f1_score=True,
+    # roc_curve=True,
     roc_auc_score=True
 )
-
-print('rmse: ', metrics['rmse'])
-print('confusion_matrix: ', metrics['confusion_matrix'])
-print('cross_val_score: ', metrics['cross_val_score'])
-print('precision_score: ', metrics['precision_score'])
-print('recall_score: ', metrics['recall_score'])
-print('roc_curve: ', metrics['roc_curve'])
-print('roc_auc_score: ', metrics['roc_auc_score'])
 
 '''
 learning curve
@@ -108,6 +111,12 @@ estimator = model
 #                     cv=cv, n_jobs=4)
 # plt.show()
 
+
+'''
+change threshold for predicting (last attempt to improve performance)
+'''
+
+
 '''
 save model
 '''
@@ -120,3 +129,4 @@ with open('decision_tree_model', 'rb') as f:
 
 print('Training Data Percentage Correct(Saved Model): ', saved_model.score(x_train, y_train))
 
+print('Testing Score', saved_model.score(x_test, y_test))
