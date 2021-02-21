@@ -22,7 +22,7 @@ class DataPreprocessor:
         return x_new
 
     def _tree_based(self, estimators=50):
-        # discard irrelecant features
+        # discard irrelevant features
         clf = ExtraTreesClassifier(n_estimators=estimators)
         clf = clf.fit(self.x, self.y)
         model = SelectFromModel(clf, prefit=True)

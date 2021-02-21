@@ -43,7 +43,7 @@ class DataMetrics:
         return conf_mtx
 
     def _get_cross_val_score(self, model, x_all, y_all):
-        cvs = cross_val_score(model, x_all, y_all, cv=3, scoring='neg_mean_squared_error')
+        cvs = cross_val_score(model, x_all, y_all, cv=5)
         print('cross validation score: ', cvs)
         print('cross validation mean: ', cvs.mean())
         print('cross validation std: ', cvs.std())

@@ -1,33 +1,38 @@
-import pickle
+from sklearn import svm as svmm
 
-from sklearn import svm
+'''
+use 2 diff kernel functions
+'''
 
-from setup_crime_data import CrimeData
+class SVM:
 
-# get training data
-# does not do well on crimedata
-cd = CrimeData()
-x_train, y_train = cd.get_training_data()
+    @staticmethod
+    def get_classifer(x, y):
+        # svm
+        svm = svmm.SVC(
+            C=1.0,
+            kernel='rbf',
+            degree=3,
+            gamma='scale',
+            coef0=0.0,
+            shrinking=True,
+            probability=False,
+            tol=1e-3,
+            cache_size=200,
+            class_weight=None,
+            verbose=False,
+            max_iter=1,
+            decision_function_shape='ovr',
+            break_ties=False,
+            random_state=None
+        ) # doesnt work
+        # linear kernel
+        lin = svmm.LinearSVC()
+        return [
+            (lin, 'Linear SVM', 'lin_svm_model'),
+            (svm, 'Support Vector Machine', 'svm_model')
+        ]
 
-# init model
-model = svm.SVC()
-# train model
-model.fit(x_train, y_train)
-
-# get % correct
-print('Training Data Percentage Correct: ', model.score(x_train, y_train))
-
-# make prediction
-# model.predict([[2,0,1]])
-# >> array([some ans])
-
-
-# save model
-with open('svm_model', 'wb') as f:
-    pickle.dump(model, f)
-
-
-with open('svm_model', 'rb') as f:
-    saved_model = pickle.load(f)
-
-print('Training Data Percentage Correct(Saved Model): ', saved_model.score(x_train, y_train))
+    @staticmethod
+    def save_figures(clf):
+        pass

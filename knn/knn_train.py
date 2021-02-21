@@ -1,37 +1,30 @@
-import pickle
-
 from sklearn.neighbors import KNeighborsClassifier
 
-from setup_crime_data import CrimeData
-
-# get training data
-# does not work with crime data, why?
-cd = CrimeData()
-x_train, y_train = cd.get_training_data()
-
-# init model
-model = KNeighborsClassifier(n_neighbors=5)
-# train model
-model.fit(x_train, y_train)
 
 '''
-fine tune
+different values of k
+knn clf map
 '''
-grid_search = GridSearchCV(model, )
-grid_search.fit()
-print(grid_search.best_params_)
-print(grid_search.best_estimator_)
-print(grid_search.cv_results_)
 
-# get % correct
-print('Training Data Percentage Correct: ', model.score(x_train, y_train))
+class KNN:
 
-# save model
-with open('k_nearest_neighbors', 'wb') as f:
-    pickle.dump(model, f)
+    @staticmethod
+    def get_classifer(x, y):
+        k_list = [1, 3, 5, 7, 10]
+        knn_list = []
 
+        for k in k_list:
+            knn_list.append(
+                (
+                    KNeighborsClassifier(
+                        n_neighbors=k
+                    ),
+                    f'KNN {k}',
+                    f'knn_{k}_model'
+                )
+            )
+        return knn_list
 
-with open('k_nearest_neighbors', 'rb') as f:
-    saved_model = pickle.load(f)
-
-print('Training Data Percentage Correct(Saved Model): ', saved_model.score(x_train, y_train))
+    @staticmethod
+    def save_figures(clf):
+        pass

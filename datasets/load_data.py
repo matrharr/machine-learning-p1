@@ -13,7 +13,8 @@ class DataLoader:
         if self.data_name == 'loan':
             return self._load_loan_data()
         else:
-            return self._load_bankrupt_data()
+            # return self._load_bankrupt_data()
+            return self._load_video_game_data()
     
     def _load_loan_data(self):
         loan = pd.read_csv('datasets/loan-default.csv')
@@ -35,14 +36,34 @@ class DataLoader:
         )
         return col_trans, loan
 
+    def _load_video_game_data(self):
+        videogame = pd.read_csv('datasets/video-game-rating.csv')
+        videogame.drop(['title'], axis=1, inplace=True)
+        [print(col) for col in videogame.columns]
+        ohe = OneHotEncoder()
+        col_trans = make_column_transformer(
+            (ohe, ['esrb_rating']),
+            remainder='passthrough'
+        )
+        return col_trans, videogame
+
     def _load_bankrupt_data(self):
         bankrupt = pd.read_csv('datasets/company-bankrupt.csv')
         # use pipeline for below?
         # remove missing values
         # if needed, convert text values to categorical (one hot)
         # feature scaling - are numerical attributes at very diff scales?
+        # bankrupt.columns = bankrupt.columns.str.replace('%', '')
+        # pd.options.display.max_columns = None
+        # print(bankrupt.head())
         ohe = OneHotEncoder()
         col_trans = make_column_transformer(
+            # ('passthrough', [
+            #     'Debt ratio',
+            #     'Current Liability to Assets',
+            #     'Borrowing dependency',
+            #     'Current Liability to Current Assets'
+            # ]),
             (ohe, []),
             remainder='passthrough'
         )
