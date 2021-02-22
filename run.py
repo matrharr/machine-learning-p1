@@ -144,7 +144,6 @@ for model in classifiers:
         #                     cv=cv, n_jobs=4)
         # plt.show()
 
-
         '''
         change threshold for predicting (last attempt to improve performance)
         - predict_proba()
