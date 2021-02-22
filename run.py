@@ -24,17 +24,13 @@ from svm.svm_train import SVM
 
 '''
 get training data
-'''
-# loader = DataLoader('bankrupt')
-# col_trans, dataset = loader.load_data()
-# y_col = 'Bankrupt?'
-# loader = DataLoader('loan')
-# col_trans, dataset = loader.load_data()
-# y_col = 'loan_default'
-
-loader = DataLoader('videogame')
+# '''
+loader = DataLoader('bankrupt')
 col_trans, dataset = loader.load_data()
-y_col = 'esrb_rating'
+y_col = 'Bankrupt?'
+# loader = DataLoader('brain')
+# col_trans, dataset = loader.load_data()
+# y_col = 'Class'
 
 '''
 stratified split - so we split data uniformly
@@ -44,18 +40,14 @@ sss = StratifiedShuffleSplit(
     random_state=42,
     test_size=0.3
 )
+
+y_all = dataset[y_col]
 x_all = dataset
 
-if loader.data_name == 'videogame':
-    le = preprocessing.LabelEncoder()
-    le.fit(['RP', 'EC', 'E', 'E 10+', 'T', 'M', 'A', 'ET'])
-    y_all = le.transform(dataset[y_col])
-    # need to do more, convert column in dataset so can show up in correlation matrix
-    # also need to get working for selectkbest
-else:
-    y_all = dataset[y_col]
-
-# x_all = SelectKBest(chi2, k=5).fit_transform(x_all, y_all)
+# what is logic in selecting features? compare to correlation
+chy = SelectKBest(chi2, k=5)
+x_all = chy.fit_transform(x_all, y_all)
+print('Selected Columns: ', dataset.columns[chy.get_support()])
 
 for train_index, test_index in sss.split(x_all, y_all):
     train_set = dataset.loc[train_index]

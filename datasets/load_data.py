@@ -10,12 +10,32 @@ class DataLoader:
         self.data_name = name
 
     def load_data(self):
-        if self.data_name == 'loan':
-            return self._load_loan_data()
+        if self.data_name == 'bankrupt':
+            # return self._load_loan_data()
+            return self._load_bankrupt_data()
         else:
-            # return self._load_bankrupt_data()
-            return self._load_video_game_data()
+            # return self._load_video_game_data()
+            return self._load_brain_tumor_data()
     
+    def _load_brain_tumor_data(self):
+        brain = pd.read_csv('datasets/brain-tumor.csv')
+        # remove missing values
+        # feature scaling - are numerical attributes at very diff scales?
+        brain.drop(['Image'], axis=1, inplace=True)
+        ohe = OneHotEncoder()
+        col_trans = make_column_transformer(
+            # ('passthrough', [
+            #     'Debt ratio',
+            #     'Current Liability to Assets',
+            #     'Borrowing dependency',
+            #     'Current Liability to Current Assets'
+            # ]),
+            (ohe, []),
+            remainder='passthrough'
+        )
+        return col_trans, brain
+
+
     def _load_loan_data(self):
         loan = pd.read_csv('datasets/loan-default.csv')
         # remove missing values
@@ -42,20 +62,16 @@ class DataLoader:
         [print(col) for col in videogame.columns]
         ohe = OneHotEncoder()
         col_trans = make_column_transformer(
-            (ohe, ['esrb_rating']),
+            (ohe, ['']),
             remainder='passthrough'
         )
         return col_trans, videogame
 
     def _load_bankrupt_data(self):
         bankrupt = pd.read_csv('datasets/company-bankrupt.csv')
-        # use pipeline for below?
         # remove missing values
         # if needed, convert text values to categorical (one hot)
         # feature scaling - are numerical attributes at very diff scales?
-        # bankrupt.columns = bankrupt.columns.str.replace('%', '')
-        # pd.options.display.max_columns = None
-        # print(bankrupt.head())
         ohe = OneHotEncoder()
         col_trans = make_column_transformer(
             # ('passthrough', [
