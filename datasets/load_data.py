@@ -19,6 +19,7 @@ class DataLoader:
     
     def _load_brain_tumor_data(self):
         brain = pd.read_csv('datasets/brain-tumor.csv')
+        # brain = brain.loc[:2000]
         # remove missing values
         # feature scaling - are numerical attributes at very diff scales?
         brain.drop(['Image'], axis=1, inplace=True)
@@ -38,6 +39,7 @@ class DataLoader:
 
     def _load_loan_data(self):
         loan = pd.read_csv('datasets/loan-default.csv')
+        loan = loan[:500]
         # remove missing values
         # if needed, convert text values to categorical (one hot)
         # feature scaling - are numerical attributes at very diff scales?
