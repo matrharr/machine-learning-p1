@@ -25,12 +25,12 @@ class NeuralNetwork:
     
     def get_classifer(self, x, y):
         self.alpha_list = 10.0 ** -np.arange(1, 7)
-        # self.alpha_list = [0.001]
+        # self.alpha_list = [0.0001]
         nn_list = []
         for a in self.alpha_list:
             nn = MLPClassifier(
                 solver="lbfgs",
-                hidden_layer_sizes=(3,2),
+                hidden_layer_sizes=(3,),
                 activation='relu',
                 batch_size='auto',
                 alpha=a, # e-5
@@ -39,7 +39,7 @@ class NeuralNetwork:
                 power_t=0.5,
                 max_iter=400,
                 shuffle=True,
-                random_state=1,
+                random_state=3,
                 tol=0.0001,
                 verbose=False,
                 warm_start=False,

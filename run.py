@@ -182,5 +182,7 @@ for model in classifiers:
 # knnclass = classifiers[0]
 # knnclass.plot(x_train, y_train, x_test, y_test)
 
-nnclass = classifiers[0]
-nnclass.plot(x_train, y_train, x_test, y_test)
+# nnclass = classifiers[0]
+# nnclass.plot(x_train, y_train, x_test, y_test)
+
+

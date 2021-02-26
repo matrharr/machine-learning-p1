@@ -1,3 +1,6 @@
+# this file was copied from a scikit learn example
+# https://scikit-learn.org/stable/auto_examples/model_selection/plot_learning_curve.html
+
 import numpy as np
 import matplotlib as plt
 
