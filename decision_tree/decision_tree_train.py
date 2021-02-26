@@ -36,7 +36,7 @@ class DecisionTree:
 
     def get_classifer(self, x, y):
         ccp_alphas = self.get_ccp_alphas(x, y)
-        print('num of ccp alphas ', len(ccp_alphas))
+        # print('num of ccp alphas ', len(ccp_alphas))
         dtrees = []
         ccp_alphas = [0.003]
         for ccp_alpha in ccp_alphas:

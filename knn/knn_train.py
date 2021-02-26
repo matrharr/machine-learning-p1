@@ -61,5 +61,5 @@ class KNN:
                 drawstyle="steps-post")
         fig.savefig('figures/knn_accuracy.png')
         ax.legend()
-        # plt.show()
+        plt.show()
 

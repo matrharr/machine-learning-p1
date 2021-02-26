@@ -71,11 +71,11 @@ corr_matrix = dataset.corr()
 print(corr_matrix[y_col].sort_values(ascending=False))
 
 classifiers = [
-    # DecisionTree(),
-    # KNN(),
-    # Boosting(),
+    DecisionTree(),
+    KNN(),
+    Boosting(),
     NeuralNetwork(),
-    # SVM()
+    SVM()
 ]
 
 for model in classifiers:
@@ -123,25 +123,25 @@ for model in classifiers:
         learning curve
         - plots of the model performance on training and validation sets as a function of the training set size (or iteration). train model several times on different sized subsets of the training set.
         '''
-        # fig, axes = plt.subplots(3, 2, figsize=(10, 15))
+        fig, axes = plt.subplots(3, 2, figsize=(10, 15))
         title = f'Learning Curves ({label})'
         # Cross validation with 100 iterations to get smoother mean test and train
         # score curves, each time with 20% data randomly selected as a validation set.
         cv = ShuffleSplit(n_splits=100, test_size=0.2, random_state=0)
 
         estimator = pipe
-        # plot_learning_curve(
-        #     estimator,
-        #     title,
-        #     x_all,
-        #     y_all,
-        #     axes=axes[:, 0],
-        #     ylim=(0.7, 1.01),
-        #     cv=cv,
-        #     n_jobs=4
-        # )
+        plot_learning_curve(
+            estimator,
+            title,
+            x_all,
+            y_all,
+            axes=axes[:, 0],
+            ylim=(0.7, 1.01),
+            cv=cv,
+            n_jobs=4
+        )
 
-        # fig.savefig(f'figures/{loader.data_name}_{name}_learning_curve')
+        fig.savefig(f'figures/{loader.data_name}_{name}_learning_curve')
 
         # title = r"Learning Curves (SVM, RBF kernel, $\gamma=0.001$)"
         # # SVC is more expensive so we do a lower number of CV iterations:
@@ -149,7 +149,7 @@ for model in classifiers:
         # estimator = SVC(gamma=0.001)
         # plot_learning_curve(estimator, title, X, y, axes=axes[:, 1], ylim=(0.7, 1.01),
         #                     cv=cv, n_jobs=4)
-        # plt.show()
+        plt.show()
 
         '''
         change threshold for predicting (last attempt to improve performance)
@@ -176,13 +176,13 @@ for model in classifiers:
 
         print('Testing Score', pipe.score(x_test, y_test))
 
-# dtclass = classifiers[0]
-# dtclass.plot_alpha_accuracy(x_train, y_train, x_test, y_test)
+dtclass = classifiers[0]
+dtclass.plot_alpha_accuracy(x_train, y_train, x_test, y_test)
 
-# knnclass = classifiers[0]
-# knnclass.plot(x_train, y_train, x_test, y_test)
+knnclass = classifiers[1]
+knnclass.plot(x_train, y_train, x_test, y_test)
 
-# nnclass = classifiers[0]
-# nnclass.plot(x_train, y_train, x_test, y_test)
+nnclass = classifiers[3]
+nnclass.plot(x_train, y_train, x_test, y_test)
 
 
